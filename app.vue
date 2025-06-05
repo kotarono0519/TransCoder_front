@@ -10,6 +10,7 @@
         <CodeEditor
           v-model="sourceCode"
           :loading="loading"
+          :target-language="targetLanguage"
           @convert="handleConvert"
         />
       </div>
@@ -17,8 +18,8 @@
       <!-- Right Pane - Translated Code Viewer -->
       <div class="w-full lg:w-1/2 h-1/2 lg:h-full">
         <CodeViewer
+          v-model:language="targetLanguage"
           :model-value="translatedCode"
-          :initial-language="targetLanguage"
           @copy-success="showCopySuccess"
           @copy-error="showCopyError"
         />
@@ -37,12 +38,11 @@ const targetLanguage = ref('python')
 
 const { convert, loading } = useConvert()
 
-const handleConvert = async ({ sourceLanguage, targetLanguage: target, sourceCode: code }: ConvertRequest & { targetLanguage: string }) => {
+const handleConvert = async ({ sourceLanguage, sourceCode: code }: { sourceLanguage: string, sourceCode: string }) => {
   try {
-    targetLanguage.value = target
     const result = await convert({
       source_language: sourceLanguage,
-      target_language: target,
+      target_language: targetLanguage.value,
       code
     })
     translatedCode.value = result

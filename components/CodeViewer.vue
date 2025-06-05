@@ -1,11 +1,14 @@
 <template>
   <div class="flex flex-col h-full">
     <div class="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-600">
-      <LanguageSelect
-        v-model="language"
-        :languages="targetLanguages"
-        class="w-48"
-      />
+      <div class="flex flex-col">
+        <label class="text-xs text-gray-400 mb-1">To</label>
+        <LanguageSelect
+          v-model="internalLanguage"
+          :languages="targetLanguages"
+          class="w-36"
+        />
+      </div>
       <button
         @click="copyToClipboard"
         :disabled="!modelValue.trim()"
@@ -24,22 +27,26 @@ import type { Language } from '~/types'
 
 interface Props {
   modelValue: string
-  initialLanguage?: string
+  language: string
 }
 
 interface Emits {
   (e: 'copy-success'): void
   (e: 'copy-error'): void
+  (e: 'update:language', value: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  initialLanguage: 'python'
+  language: 'python'
 })
 
 const emit = defineEmits<Emits>()
 
 const viewerRef = ref<HTMLElement>()
-const language = ref(props.initialLanguage)
+const internalLanguage = computed({
+  get: () => props.language,
+  set: (value) => emit('update:language', value)
+})
 
 const targetLanguages = computed(() => SUPPORTED_LANGUAGES.filter(lang => lang.value !== 'auto'))
 
@@ -78,7 +85,7 @@ onMounted(async () => {
 
     viewer = monaco.editor.create(viewerRef.value, {
       value: props.modelValue,
-      language: language.value,
+      language: props.language,
       theme: 'dark-theme',
       automaticLayout: true,
       minimap: { enabled: false },
@@ -103,7 +110,7 @@ watch(() => props.modelValue, (newValue) => {
   }
 })
 
-watch(language, (newLang) => {
+watch(() => props.language, (newLang) => {
   if (viewer && monaco) {
     const model = viewer.getModel()
     if (model) {

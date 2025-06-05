@@ -1,23 +1,13 @@
 <template>
   <div class="flex flex-col h-full">
     <div class="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-600">
-      <div class="flex space-x-4">
-        <div class="flex flex-col">
-          <label class="text-xs text-gray-400 mb-1">From</label>
-          <LanguageSelect
-            v-model="sourceLanguage"
-            :languages="sourceLanguages"
-            class="w-36"
-          />
-        </div>
-        <div class="flex flex-col">
-          <label class="text-xs text-gray-400 mb-1">To</label>
-          <LanguageSelect
-            v-model="targetLanguage"
-            :languages="targetLanguages"
-            class="w-36"
-          />
-        </div>
+      <div class="flex flex-col">
+        <label class="text-xs text-gray-400 mb-1">From</label>
+        <LanguageSelect
+          v-model="sourceLanguage"
+          :languages="sourceLanguages"
+          class="w-36"
+        />
       </div>
       <button
         @click="handleConvert"
@@ -38,22 +28,23 @@ import type { Language } from '~/types'
 interface Props {
   modelValue: string
   loading?: boolean
+  targetLanguage: string
 }
 
 interface Emits {
   (e: 'update:modelValue', value: string): void
-  (e: 'convert', data: { sourceLanguage: string, targetLanguage: string, sourceCode: string }): void
+  (e: 'convert', data: { sourceLanguage: string, sourceCode: string }): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
+  targetLanguage: 'python'
 })
 
 const emit = defineEmits<Emits>()
 
 const editorRef = ref<HTMLElement>()
 const sourceLanguage = ref('auto')
-const targetLanguage = ref('python')
 
 const sourceLanguages = computed(() => SUPPORTED_LANGUAGES)
 const targetLanguages = computed(() => SUPPORTED_LANGUAGES.filter(lang => lang.value !== 'auto'))
@@ -65,7 +56,6 @@ const handleConvert = () => {
   if (props.modelValue.trim()) {
     emit('convert', {
       sourceLanguage: sourceLanguage.value,
-      targetLanguage: targetLanguage.value,
       sourceCode: props.modelValue
     })
   }
