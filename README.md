@@ -27,6 +27,10 @@ A minimal web application for developers to translate code between programming l
 # Install dependencies
 npm install
 
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your Gemini API key
+
 # Start development server
 npm run dev
 
@@ -38,6 +42,14 @@ npm run build
 ```
 
 The app will be available at `http://localhost:3000`
+
+## Setup
+
+1. **Get API Key**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey) to get your free API key
+2. **Set Environment Variable**: Create a `.env` file and add your API key:
+   ```
+   PALM_API_KEY=your_actual_api_key_here
+   ```
 
 ## Project Structure
 

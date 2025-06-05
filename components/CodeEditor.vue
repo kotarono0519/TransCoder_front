@@ -49,8 +49,7 @@ const sourceLanguage = ref('auto')
 const sourceLanguages = computed(() => SUPPORTED_LANGUAGES)
 const targetLanguages = computed(() => SUPPORTED_LANGUAGES.filter(lang => lang.value !== 'auto'))
 
-let editor: any = null
-let monaco: any = null
+let editorView: any = null
 
 const handleConvert = () => {
   if (props.modelValue.trim()) {
@@ -72,65 +71,72 @@ onMounted(async () => {
   if (!editorRef.value || !process.client) return
 
   try {
-    // Dynamically import Monaco Editor only on client side
-    const { default: loader } = await import('@monaco-editor/loader')
-    const monacoModule = await import('monaco-editor')
+    // CodeMirror を動的インポート
+    const { EditorView } = await import('@codemirror/view')
+    const { EditorState } = await import('@codemirror/state')
+    const { oneDark } = await import('@codemirror/theme-one-dark')
+    const { javascript } = await import('@codemirror/lang-javascript')
     
-    loader.config({ monaco: monacoModule })
-    monaco = await loader.init()
+    const extensions = [
+      oneDark,
+      javascript(),
+      EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          const newValue = update.state.doc.toString()
+          emit('update:modelValue', newValue)
+        }
+      }),
+      EditorView.theme({
+        '&': {
+          fontSize: '14px',
+          fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace'
+        },
+        '.cm-content': {
+          padding: '12px',
+          minHeight: '200px'
+        },
+        '.cm-focused': {
+          outline: 'none'
+        },
+        '.cm-editor': {
+          height: '100%'
+        },
+        '.cm-scroller': {
+          height: '100%'
+        }
+      })
+    ]
 
-    monaco.editor.defineTheme('dark-theme', {
-      base: 'vs-dark',
-      inherit: true,
-      rules: [],
-      colors: {
-        'editor.background': '#1f2937',
-        'editor.lineHighlightBackground': '#374151'
-      }
+    const state = EditorState.create({
+      doc: props.modelValue,
+      extensions
     })
 
-    editor = monaco.editor.create(editorRef.value, {
-      value: props.modelValue,
-      language: 'javascript',
-      theme: 'dark-theme',
-      automaticLayout: true,
-      minimap: { enabled: false },
-      scrollBeyondLastLine: false,
-      wordWrap: 'on',
-      fontSize: 14,
-      fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace'
+    editorView = new EditorView({
+      state,
+      parent: editorRef.value
     })
-
-    editor.onDidChangeModelContent(() => {
-      const value = editor?.getValue() || ''
-      emit('update:modelValue', value)
-    })
-
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, handleConvert)
 
     document.addEventListener('keydown', handleKeydown)
   } catch (error) {
-    console.error('Failed to load Monaco Editor:', error)
+    console.error('Failed to load CodeMirror:', error)
   }
 })
 
 onUnmounted(() => {
-  editor?.dispose()
+  editorView?.destroy()
   document.removeEventListener('keydown', handleKeydown)
 })
 
 watch(() => props.modelValue, (newValue) => {
-  if (editor && editor.getValue() !== newValue) {
-    editor.setValue(newValue)
-  }
-})
-
-watch(sourceLanguage, (newLang) => {
-  if (editor && monaco && newLang !== 'auto') {
-    const model = editor.getModel()
-    if (model) {
-      monaco.editor.setModelLanguage(model, newLang)
-    }
+  if (editorView && editorView.state.doc.toString() !== newValue) {
+    editorView.dispatch({
+      changes: {
+        from: 0,
+        to: editorView.state.doc.length,
+        insert: newValue
+      }
+    })
   }
 })
 </script>

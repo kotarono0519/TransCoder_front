@@ -14,5 +14,15 @@ export default defineNuxtConfig({
         class: 'dark'
       }
     }
+  },
+  runtimeConfig: {
+    public: {
+      palmApiKey: process.env.PALM_API_KEY
+    }
+  },
+  vite: {
+    optimizeDeps: {
+      exclude: ['codemirror', '@codemirror/view', '@codemirror/state', '@codemirror/theme-one-dark', '@codemirror/lang-javascript', '@codemirror/lang-python', '@codemirror/lang-java', '@codemirror/lang-php', '@codemirror/lang-cpp']
+    }
   }
 })
