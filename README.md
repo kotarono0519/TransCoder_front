@@ -1,77 +1,77 @@
-# TransCoder - Code Translation Tool
+# TransCoder - コード翻訳ツール
 
-A minimal web application for developers to translate code between programming languages for learning purposes.
+開発者が学習目的でプログラミング言語間のコードを翻訳するための最小限のWebアプリケーションです。
 
-## Features
+## 特徴
 
-- **2-pane layout**: Side-by-side code editor and viewer (responsive design)
-- **Monaco Editor**: Syntax highlighting with theme support
-- **Multiple Languages**: Support for JavaScript, TypeScript, Python, Java, C#, C++, Go, Rust, PHP, Ruby
-- **Auto-detection**: Source language can be automatically detected
-- **Copy Functionality**: Easy copying of translated code
-- **Keyboard Shortcuts**: Cmd/Ctrl + Enter for quick conversion
-- **Toast Notifications**: Error and success feedback
-- **Dark Mode**: Professional dark theme throughout
+- **2ペインレイアウト**: 横並びのコードエディタとビューア（レスポンシブデザイン）
+- **Monaco Editor**: テーマをサポートするシンタックスハイライト
+- **複数言語対応**: JavaScript, TypeScript, Python, Java, C#, C++, Go, Rust, PHP, Rubyをサポート
+- **自動検出**: ソース言語を自動で検出可能
+- **コピー機能**: 翻訳されたコードを簡単にコピー
+- **キーボードショートカット**: Cmd/Ctrl + Enterで素早く変換
+- **トースト通知**: エラーや成功のフィードバック
+- **ダークモード**: 全体を通したプロフェッショナルなダークテーマ
 
-## Tech Stack
+## 技術スタック
 
-- **Framework**: Nuxt 3 (Vue 3 with `<script setup>`)
-- **Styling**: Tailwind CSS
-- **Code Editor**: Monaco Editor
-- **Package Manager**: npm/pnpm
-- **Testing**: Vitest + Vue Test Utils
+- **フレームワーク**: Nuxt 3 (Vue 3 `<script setup>`)
+- **スタイリング**: Tailwind CSS
+- **コードエディタ**: Monaco Editor
+- **パッケージマネージャー**: npm/pnpm
+- **テスト**: Vitest + Vue Test Utils
 
-## Quick Start
+## クイックスタート
 
 ```bash
-# Install dependencies
+# 依存関係をインストール
 npm install
 
-# Set up environment variables
+# 環境変数を設定
 cp .env.example .env
-# Edit .env and add your Gemini API key
+# .envを編集してGemini APIキーを追加
 
-# Start development server
+# 開発サーバーを起動
 npm run dev
 
-# Run tests
+# テストを実行
 npm test
 
-# Build for production
+# 本番用にビルド
 npm run build
 ```
 
-The app will be available at `http://localhost:3000`
+アプリは `http://localhost:3000` で利用可能になります。
 
-## Setup
+## セットアップ
 
-1. **Get API Key**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey) to get your free API key
-2. **Set Environment Variable**: Create a `.env` file and add your API key:
+1. **APIキーの取得**: [Google AI Studio](https://makersuite.google.com/app/apikey)にアクセスして無料のAPIキーを取得します。
+2. **環境変数の設定**: `.env`ファイルを作成し、APIキーを追加します:
    ```
    PALM_API_KEY=your_actual_api_key_here
    ```
 
-## Project Structure
+## プロジェクト構成
 
 ```
-├── components/           # Vue components
-│   ├── CodeEditor.vue   # Monaco-based code editor
-│   ├── CodeViewer.vue   # Read-only code viewer
-│   └── LanguageSelect.vue # Language dropdown
-├── composables/         # Vue composables
-│   └── useConvert.ts    # API integration logic
-├── types/              # TypeScript definitions
-│   └── index.ts        # Shared types and constants
-├── tests/              # Unit tests
-├── plugins/            # Nuxt plugins
-└── app.vue             # Main application layout
+├── components/           # Vueコンポーネント
+│   ├── CodeEditor.vue   # Monacoベースのコードエディタ
+│   ├── CodeViewer.vue   # 読み取り専用のコードビューア
+│   └── LanguageSelect.vue # 言語選択ドロップダウン
+├── composables/         # Vueコンポーザブル
+│   └── useConvert.ts    # API連携ロジック
+├── types/              # TypeScriptの型定義
+│   └── index.ts        # 共通の型と定数
+├── tests/              # ユニットテスト
+├── plugins/            # Nuxtプラグイン
+└── app.vue             # メインアプリケーションレイアウト
 ```
 
-## API Integration
+## API連携
 
-The app expects a backend API at `http://localhost:8000/convert` with the following interface:
+このアプリは、`http://localhost:8000/convert` にあるバックエンドAPIが以下のインターフェースを持つことを想定しています:
 
-**Request:**
+**リクエスト:**
 ```json
 {
   "source_language": "javascript",
@@ -80,22 +80,22 @@ The app expects a backend API at `http://localhost:8000/convert` with the follow
 }
 ```
 
-**Response:**
+**レスポンス:**
 ```json
 {
   "translated_code": "print('Hello World')"
 }
 ```
 
-## Usage
+## 使い方
 
-1. Select source language (or use "Auto Detect")
-2. Select target language
-3. Write/paste code in the left editor
-4. Press "Convert" button or use Cmd/Ctrl + Enter
-5. View translated code in the right panel
-6. Copy the result using the "Copy" button
+1. 変換元の言語を選択します（または「自動検出」を使用）
+2. 変換先の言語を選択します
+3. 左のエディタにコードを記述または貼り付けます
+4. 「変換」ボタンを押すか、Cmd/Ctrl + Enterを使用します
+5. 右のパネルで翻訳されたコードを表示します
+6. 「コピー」ボタンを使って結果をコピーします
 
-## Development
+## 開発
 
-The application follows Vue 3 Composition API patterns with TypeScript. Components are designed to be minimal and focused on specific functionality. The useConvert composable handles all API communication with proper error handling and loading states.
+このアプリケーションは、TypeScriptを使用したVue 3のComposition APIパターンに従っています。コンポーネントは最小限で、特定の機能に焦点を当てて設計されています。`useConvert`コンポーザブルは、適切なエラーハンドリングとローディング状態で全てのAPI通信を処理します。
