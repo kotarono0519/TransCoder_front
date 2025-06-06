@@ -115,24 +115,22 @@ onMounted(async () => {
         }
       }),
       EditorView.theme({
-        '&': {
-          fontSize: '14px',
-          fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace'
-        },
-        '.cm-content': {
-          padding: '12px',
-          minHeight: '200px'
-        },
-        '.cm-focused': {
-          outline: 'none'
-        },
-        '.cm-editor': {
-          height: '100%'
-        },
-        '.cm-scroller': {
-          height: '100%'
-        }
-      })
+  '&': {
+    height: '100%',
+    fontSize: '14px',
+    fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace'
+  },
+  '.cm-scroller': {
+    height: '100%'
+  },
+  '.cm-content': {
+    padding: '12px',
+    minHeight: '200px'
+  },
+  '.cm-focused': {
+    outline: 'none'
+  }
+})
     ]
 
     const state = EditorState.create({

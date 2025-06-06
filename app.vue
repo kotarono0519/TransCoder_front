@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen bg-gray-900 text-white overflow-hidden">
+  <div class="h-screen text-white overflow-hidden">
     <header class="border-b border-gray-700 p-4">
       <h1 class="text-xl font-bold">TransCoder - Code Translation Tool</h1>
     </header>
@@ -31,6 +31,12 @@
 <script setup lang="ts">
 import { toast } from 'vue3-toastify'
 import type { ConvertRequest } from '~/types'
+
+useHead({
+  bodyAttrs: {
+    class: 'bg-gray-900'
+  }
+})
 
 const sourceCode = ref('')
 const translatedCode = ref('')

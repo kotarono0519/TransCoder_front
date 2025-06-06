@@ -1,4 +1,4 @@
-import type { ConvertRequest } from '~/types'
+import type { ConvertRequest, GeminiResponse } from '~/types'
 
 interface UseConvertOptions {
   apiKey?: string
@@ -38,7 +38,7 @@ ${request.code}
 \`\`\``
 
       // Gemini API呼び出し
-      const response = await $fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
+      const response = await $fetch<GeminiResponse>('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

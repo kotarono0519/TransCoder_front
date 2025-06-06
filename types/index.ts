@@ -8,6 +8,16 @@ export interface ConvertResponse {
   translated_code: string
 }
 
+export interface GeminiResponse {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{
+        text?: string
+      }>
+    }
+  }>
+}
+
 export interface Language {
   value: string
   label: string

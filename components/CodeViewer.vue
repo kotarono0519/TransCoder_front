@@ -77,6 +77,7 @@ onMounted(async () => {
       EditorView.editable.of(false), // 読み取り専用
       EditorView.theme({
         '&': {
+          height: '100%',
           fontSize: '14px',
           fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace'
         },
@@ -88,10 +89,10 @@ onMounted(async () => {
           outline: 'none'
         },
         '.cm-editor': {
-          height: '100%'
+          /* height: '100%' */
         },
         '.cm-scroller': {
-          height: '100%'
+          /* height: '100%' */
         }
       })
     ]
