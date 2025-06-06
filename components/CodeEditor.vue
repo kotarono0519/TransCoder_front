@@ -72,14 +72,42 @@ onMounted(async () => {
 
   try {
     // CodeMirror を動的インポート
-    const { EditorView } = await import('@codemirror/view')
+    const { EditorView, keymap } = await import('@codemirror/view')
     const { EditorState } = await import('@codemirror/state')
     const { oneDark } = await import('@codemirror/theme-one-dark')
     const { javascript } = await import('@codemirror/lang-javascript')
+    const { indentWithTab, insertTab, indentLess } = await import('@codemirror/commands')
     
     const extensions = [
       oneDark,
       javascript(),
+      keymap.of([
+        {
+          key: 'Tab',
+          run: insertTab
+        },
+        {
+          key: 'Shift-Tab',
+          run: indentLess
+        },
+        {
+          key: 'Enter',
+          run: (view) => {
+            const { state, dispatch } = view
+            const selection = state.selection.main
+            const line = state.doc.lineAt(selection.from)
+            const lineText = line.text
+            
+            // 現在の行のインデントを取得
+            const indentMatch = lineText.match(/^(\s*)/)
+            const indent = indentMatch ? indentMatch[1] : ''
+            
+            // 改行 + インデントを挿入
+            dispatch(state.update(state.replaceSelection('\n' + indent)))
+            return true
+          }
+        }
+      ]),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           const newValue = update.state.doc.toString()
