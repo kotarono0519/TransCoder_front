@@ -48,7 +48,7 @@ const internalLanguage = computed({
   set: (value) => emit('update:language', value)
 })
 
-const targetLanguages = computed(() => SUPPORTED_LANGUAGES.filter(lang => lang.value !== 'auto'))
+const targetLanguages = computed(() => SUPPORTED_LANGUAGES)
 
 let viewerInstance: any = null
 
@@ -66,7 +66,7 @@ onMounted(async () => {
 
   try {
     // CodeMirror を動的インポート
-    const { EditorView } = await import('@codemirror/view')
+    const { EditorView, lineNumbers } = await import('@codemirror/view')
     const { EditorState } = await import('@codemirror/state')
     const { oneDark } = await import('@codemirror/theme-one-dark')
     const { javascript } = await import('@codemirror/lang-javascript')
@@ -74,6 +74,7 @@ onMounted(async () => {
     const extensions = [
       oneDark,
       javascript(),
+      lineNumbers(),
       EditorView.editable.of(false), // 読み取り専用
       EditorView.theme({
         '&': {

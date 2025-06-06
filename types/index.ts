@@ -24,7 +24,6 @@ export interface Language {
 }
 
 export const SUPPORTED_LANGUAGES: Language[] = [
-  { value: 'auto', label: 'Auto Detect' },
   { value: 'javascript', label: 'JavaScript' },
   { value: 'typescript', label: 'TypeScript' },
   { value: 'python', label: 'Python' },
